@@ -3,28 +3,40 @@ import yt_logo from "../assets/yt_logo.png"
 import { Button } from "../components/Button"
 import { useState } from "react"
 import { useSidebarContext } from "../context/SidebarContext"
+import { useNavigate } from "react-router-dom"
 const PageHeader = () => {
-    const [showFullWidth, setshowfullwidth] = useState(false)
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const { toggle } = useSidebarContext()
+    const [showFullWidth, setshowfullwidth] = useState<boolean>(false)
+
+    const navigate = useNavigate();
+
+    const searchQueryHandler = (event: React.FormEvent) => {
+        event.preventDefault();
+        if (searchQuery?.length > 0) {
+            navigate(`/searchResult/${searchQuery}`);
+        }
+    };
     return (
         <div className="flex  gap-10 lg:gap-20 justify-between pt-2 mb-6 mx-4">
             <div className={`gap-4 items-center flex-shrink-0 ${showFullWidth ? "hidden" : "flex"}`}>
-                <Button variant="ghost" size="icon">
+                <Button onClick={toggle} variant="ghost" size="icon">
                     <Menu />
-                </Button>
+                </Button> 
                 <a href="/">
                     <img src={yt_logo} className="h-6" />
                 </a>
             </div>
-            <form className={`md:flex gap-4 flex-grow justify-center ${showFullWidth ? "flex" : "hidden"}`}>
+            <form onSubmit={searchQueryHandler} className={`md:flex gap-4 flex-grow justify-center ${showFullWidth ? "flex" : "hidden"}`}>
                 <div className="flex flex-grow max-w-[600px]">
                     {(showFullWidth) ? <Button variant="ghost" size="icon" onClick={() => setshowfullwidth(false)}>
                         <ArrowLeft></ArrowLeft>
                     </Button> :
                         null
                     }
-                    <input type="search" placeholder="Search" className="rounded-l-full border border-secondary-border shadow-inner
+                    <input onChange={(e) => setSearchQuery(e.target.value)} type="search" placeholder="Search" className="rounded-l-full border border-secondary-border shadow-inner
                     shadow-secondary py-1 px-4 text-lg w-full focus:border-blue-500 outline-none" />
-                    <Button className="rounded-r-full border border-secondary-border">
+                    <Button type="submit" className="rounded-r-full border border-secondary-border">
                         <Search />
                     </Button>
                 </div>
@@ -55,27 +67,26 @@ const PageHeader = () => {
 
 type PageHeaderFirstSectionProps = {
     hidden?: boolean
-  }
-  
-  export function PageHeaderFirstSection({
+}
+
+export function PageHeaderFirstSection({
     hidden = false,
-  }: PageHeaderFirstSectionProps) {
+}: PageHeaderFirstSectionProps) {
     const { toggle } = useSidebarContext()
-  
+
     return (
-      <div
-        className={`gap-4 items-center flex-shrink-0 ${
-          hidden ? "hidden" : "flex"
-        }`}
-      >
-        <Button onClick={toggle} variant="ghost" size="icon">
-          <Menu />
-        </Button>
-        <a href="/">
-          <img src={yt_logo} className="h-6" />
-        </a>
-      </div>
+        <div
+            className={`gap-4 items-center flex-shrink-0 ${hidden ? "hidden" : "flex"
+                }`}
+        >
+            <Button onClick={toggle} variant="ghost" size="icon">
+                <Menu />
+            </Button>
+            <a href="/">
+                <img src={yt_logo} className="h-6" />
+            </a>
+        </div>
     )
-  }
+}
 
 export default PageHeader
