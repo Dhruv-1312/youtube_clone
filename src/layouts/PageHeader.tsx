@@ -2,6 +2,7 @@ import { ArrowLeft, Bell, Menu, Mic, Search, UserCircle, Video } from "lucide-re
 import yt_logo from "../assets/yt_logo.png"
 import { Button } from "../components/Button"
 import { useState } from "react"
+import { useSidebarContext } from "../context/SidebarContext"
 const PageHeader = () => {
     const [showFullWidth, setshowfullwidth] = useState(false)
     return (
@@ -51,5 +52,30 @@ const PageHeader = () => {
         </div>
     )
 }
+
+type PageHeaderFirstSectionProps = {
+    hidden?: boolean
+  }
+  
+  export function PageHeaderFirstSection({
+    hidden = false,
+  }: PageHeaderFirstSectionProps) {
+    const { toggle } = useSidebarContext()
+  
+    return (
+      <div
+        className={`gap-4 items-center flex-shrink-0 ${
+          hidden ? "hidden" : "flex"
+        }`}
+      >
+        <Button onClick={toggle} variant="ghost" size="icon">
+          <Menu />
+        </Button>
+        <a href="/">
+          <img src={yt_logo} className="h-6" />
+        </a>
+      </div>
+    )
+  }
 
 export default PageHeader
